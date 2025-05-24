@@ -1,0 +1,4 @@
+[submodule "src/Utils/BepInEx-Utils"]
+	path = src/Utils/BepInEx-Utils
+	url = https://github.com/caioreix/bepinex-utils
+	branch = main

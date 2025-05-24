@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ProjectName>PluginReloader</ProjectName>
+    <AssemblyName>PluginReloader</AssemblyName>
+    <RootNamespace>PluginReloader</RootNamespace>
+    <SolutionName>PluginReloader</SolutionName>
+    <Description>PluginReloader</Description>
+    <Version>0.0.0</Version>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <NoWarn>IDE0130</NoWarn>
+
+    <BepInExVersion>6.0.0-be.733</BepInExVersion>
+  </PropertyGroup>
+
+  <Target Name="Copy to Dist" AfterTargets="AfterBuild">
+    <Copy SourceFiles="$(TargetDir)$(ProjectName).dll" DestinationFolder="./dist" />
+  </Target>
+
+  <Import Project="Config.xml" Condition="Exists('Config.xml')" />
+  <Target Name="CopyDLLs" AfterTargets="AfterBuild" Condition=" '$(Configuration)' == 'Test'">
+    <Copy SourceFiles="$(TargetDir)$(ProjectName).dll" DestinationFolder="$(BuildClientDestinationFolder)" Condition="'$(BuildClientDestinationFolder)' != ''" />
+    <Copy SourceFiles="$(TargetDir)$(ProjectName).dll" DestinationFolder="$(BuildServerDestinationFolder)" Condition="'$(BuildServerDestinationFolder)' != ''" />
+  </Target>
+
+  <ItemGroup>
+    <InteropDllFiles Include="$(InteropDllsFolder)\**\*.dll" Condition="'$(InteropDllsFolder)' != ''" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="$(BepInExVersion)" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.Core" Version="$(BepInExVersion)" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+
+    <Reference Include="@(InteropDllFiles)" Condition="'$(InteropDllsFolder)' != ''">
+      <HintPath>%(InteropDllFiles.Identity)</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

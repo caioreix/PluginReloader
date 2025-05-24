@@ -1,0 +1,75 @@
+name: Release
+
+on:
+  release:
+    types: [published, edited]
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        required: true
+        description: The tag to release.
+        type: string
+
+jobs:
+  release_on_thunderstore:
+    if: |
+      github.repository != 'caioreix/bepinex-template' ||
+      github.event_name == 'workflow_dispatch' ||
+      github.event.action == 'published' ||
+      (github.event.action == 'edited' && github.event.release.prerelease == false)
+    env:
+      RELEASE_TAG: ${{ github.event.inputs.tag_name || github.event.release.tag_name }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Get the last release tag
+        id: get_last_release
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0)
+          echo "LAST_TAG=${LAST_TAG}" >> $GITHUB_ENV
+          echo "::set-output name=last_tag::${LAST_TAG}"
+
+      - name: Trim 'v' prefix from RELEASE_TAG and LAST_TAG if it exists
+        run: |
+          TRIMMED_RELEASE_TAG=$(echo ${{ env.RELEASE_TAG }} | sed 's/^v//')
+          echo "RELEASE_TAG=${TRIMMED_RELEASE_TAG}" >> $GITHUB_ENV
+          TRIMMED_LAST_TAG=$(echo ${{ env.LAST_TAG }} | sed 's/^v//')
+          echo "LAST_TAG=${TRIMMED_LAST_TAG}" >> $GITHUB_ENV
+
+      - name: Check if LAST_TAG equals RELEASE_TAG
+        if: github.event.action == 'edited'
+        run: |
+          if [ ${{ env.LAST_TAG }} != ${{ env.RELEASE_TAG }} ]; then
+            echo "Error: LAST_TAG (${{ env.LAST_TAG }}) does not match RELEASE_TAG (${{ env.RELEASE_TAG }})"
+            exit 1
+          fi
+
+      - name: Download Release
+        run: gh release download v${{ env.RELEASE_TAG }} -D ./dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Copy CHANGELOG.md to dist directory
+        run: |
+          if [ -f "CHANGELOG.md" ]; then
+            cp CHANGELOG.md ./dist/
+              else
+            echo "CHANGELOG.md does not exist"
+              fi
+
+      - name: Install tcli
+        run: dotnet tool install --global tcli
+
+      - name: Run tcli
+        run: tcli publish --token ${{ secrets.THUNDERSTORE_KEY }} --package-version ${{ env.RELEASE_TAG }}
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./build

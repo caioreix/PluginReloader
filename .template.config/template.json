@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Caioreix",
+  "classifications": [
+    "BepInEx",
+    "Plugin",
+    "Template"
+  ],
+  "description": "A template for creating BepInEx plugins",
+  "identity": "BepInEx.Template.CSharp",
+  "name": "BepInEx Plugin Template",
+  "shortName": "bepinex-plugin",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "PluginReloader",
+  "preferNameDirectory": true,
+  "sources": [
+    {
+      "exclude": [
+        ".github/workflows/build_package.yml",
+        ".github/workflows/release_package.yml",
+        ".template.config",
+        ".nuspec",
+        ".git/*",
+        "bin/*",
+        "obj/*",
+        "dist/*"
+      ]
+    }
+  ]
+}
