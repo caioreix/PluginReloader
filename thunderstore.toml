@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 namespace = "Caioreix"
 name = "PluginReloader"
 versionNumber = "0.0.0"
-description = ""
+description = "PluginReloader is a BepInEx plugin designed to streamline the development and debugging of other BepInEx plugins. It provides hot-reloading capabilities for plugins, configuration and data to make plugin iteration faster and safer."
 websiteUrl = "https://github.com/caioreix/PluginReloader"
 containsNsfwContent = false
 
@@ -22,6 +22,6 @@ target = ""
 
 [publish]
 repository = "https://thunderstore.io"
-communities = []
+communities = ["deep-rock-galactic-survivor"]
 
 [publish.categories]

@@ -6,7 +6,8 @@
     <AssemblyName>PluginReloader</AssemblyName>
     <RootNamespace>PluginReloader</RootNamespace>
     <SolutionName>PluginReloader</SolutionName>
-    <Description>PluginReloader</Description>
+    <Description>PluginReloader is a BepInEx plugin designed to streamline the development and debugging of other BepInEx plugins. It provides hot-reloading capabilities for plugins, configuration and data to make plugin iteration faster and safer.
+</Description>
     <Version>0.0.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
