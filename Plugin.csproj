@@ -10,7 +10,7 @@
     <Version>0.0.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
-    <NoWarn>IDE0130</NoWarn>
+    <NoWarn>IDE0130;CS0435</NoWarn>
 
     <BepInExVersion>6.0.0-be.733</BepInExVersion>
   </PropertyGroup>
@@ -30,9 +30,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <LocalDllFiles Include=".\lib\**\*.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BepInEx.Unity.IL2CPP" Version="$(BepInExVersion)" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.Core" Version="$(BepInExVersion)" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <PackageReference Include="DeepRockGalacticSurvival.Interop" Version="0.4.87-B" /> <!-- used just to get unity libs -->
 
     <Reference Include="@(InteropDllFiles)" Condition="'$(InteropDllsFolder)' != ''">
       <HintPath>%(InteropDllFiles.Identity)</HintPath>
